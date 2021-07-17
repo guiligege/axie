@@ -83,7 +83,7 @@ public class UserController extends PCKBaseController {
     public ModelAndView tologin(HttpServletRequest request, HttpServletResponse response) {
 
         log.warn("tologin...");
-        //todo
+
         return new ModelAndView("/client/tologin");
     }
 
@@ -94,7 +94,7 @@ public class UserController extends PCKBaseController {
     public ModelAndView registerMethod(HttpServletRequest request, HttpServletResponse response) throws Exception{
 
         log.warn("toregiter...");
-        //todo
+
         return new ModelAndView("/client/registerUser");
     }
 
@@ -105,7 +105,7 @@ public class UserController extends PCKBaseController {
     public ModelAndView detailTest(HttpServletRequest request, HttpServletResponse response) throws Exception{
 
         log.warn("toregiter...");
-        //todo
+
         return new ModelAndView("/detailTest");
     }
 
@@ -215,7 +215,7 @@ public class UserController extends PCKBaseController {
     public ModelAndView to_tixian(HttpServletRequest request, HttpServletResponse response) {
 
 
-        //todo 回显，可提现金额，和保证金额度
+        //回显，可提现金额，和保证金额度
         //0、查询当前用户是否可提现。（是否有未支付订单，是否有未下架商品）
         //1、查询当我用户的保证金金额
         //2、查询当前用户费用
@@ -242,7 +242,7 @@ public class UserController extends PCKBaseController {
             request.setAttribute("hasChongzhi", true);
         }
 
-        //todo 查询保证金 check
+        //查询保证金 check
         Withdraw withdraw = withdrawService.selectWithdrawBySellerId(sellerId);
         //查询当前用户是否可提现。（是否有未支付订单，是否有未下架商品）
         if(!precheck(sellerId) || withdraw!=null){
@@ -354,7 +354,7 @@ public class UserController extends PCKBaseController {
 
         try{
 
-            //todo 校验登录
+            //校验登录
             if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
                 return result.error(ExceptionEnum.NOT_LOGIN);
             }
@@ -472,7 +472,7 @@ public class UserController extends PCKBaseController {
 
         //回显示数据
         request.setAttribute("chongzhiList", orderList);
-        //todo
+        //
         return new ModelAndView("/manage/chongzhi_manage");
     }
 

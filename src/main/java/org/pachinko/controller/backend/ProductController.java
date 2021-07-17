@@ -127,7 +127,6 @@ public class ProductController extends PCKBaseController {
         //count
         productVO.setShowCount(product.getTotalCount()-product.getLockCount());
 
-        //todo 显示图片
         ////回显示数据
         request.setAttribute("product", productVO);
 
@@ -182,7 +181,7 @@ public class ProductController extends PCKBaseController {
             }
             if(!StringUtils.isEmpty(productParam.getOuterId())){
                 productParam.setOuterId(productParam.getOuterId());
-                //todo
+                //
                 productParam.setOuterUrl("https://marketplace.axieinfinity.com/axie/"+productParam.getOuterId()+"?referrer=axie.zone");
                 productParam.setOuterImg("https://storage.googleapis.com/assets.axieinfinity.com/axies/"+productParam.getOuterId()+"/axie/axie-full-transparent.png");
             }
@@ -489,7 +488,7 @@ public class ProductController extends PCKBaseController {
             //如果是卖家，到卖家商品列表 页面
             return new ModelAndView("/manage/product_manage");
         }
-        //todo
+        //
         return new ModelAndView("/client/product_list");
     }
 

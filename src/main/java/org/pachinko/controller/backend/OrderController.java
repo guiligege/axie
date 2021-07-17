@@ -60,7 +60,7 @@ public class OrderController extends PCKBaseController {
                                     @RequestBody OrderParam orderParam) {
 
         Result<Long> result = new Result<Long>();
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -75,7 +75,6 @@ public class OrderController extends PCKBaseController {
             orderParam.setProductName(product.getName());
             orderParam.setProductType(product.getType());
 
-            //todo session get
             orderParam.setBuyerId(userDTO.getId());
             orderParam.setBuyerNick(userDTO.getNick());
             orderParam.setBuyerRonin(userDTO.getRonin());
@@ -159,7 +158,7 @@ public class OrderController extends PCKBaseController {
 
         Result<Integer> result = new Result<Integer>();
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -241,7 +240,7 @@ public class OrderController extends PCKBaseController {
 
         Result<Integer> result = new Result<Integer>();
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -283,7 +282,7 @@ public class OrderController extends PCKBaseController {
 
         Result<Integer> result = new Result<Integer>();
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -325,7 +324,7 @@ public class OrderController extends PCKBaseController {
 
         Result<Integer> result = new Result<Integer>();
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -368,7 +367,7 @@ public class OrderController extends PCKBaseController {
 
         Result<Integer> result = new Result<Integer>();
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -412,7 +411,7 @@ public class OrderController extends PCKBaseController {
             return new ModelAndView("/error.htm?errorMsg='无权限'");
         }
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             log.warn("未登录");
             return new ModelAndView("/error.htm?errorMsg='未登录'");
@@ -467,7 +466,7 @@ public class OrderController extends PCKBaseController {
             return mv;
         }
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             log.warn("not login");
             ModelAndView mv = new ModelAndView("redirect:/error.htm?errorMsg=no_login");
@@ -665,13 +664,13 @@ public class OrderController extends PCKBaseController {
         request.setAttribute("orderList", orderList);
 
         if(null != sellerId && sellerId!=0){
-            //todo
+
             return new ModelAndView("/manage/order_manage");
         }
 
         //回显示数据
         request.setAttribute("flag", "order");
-        //todo
+
         return new ModelAndView("order_list");
     }
 
@@ -686,7 +685,7 @@ public class OrderController extends PCKBaseController {
 
         Result<Integer> result = new Result<Integer>();
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -721,7 +720,7 @@ public class OrderController extends PCKBaseController {
 
         Result<Integer> result = new Result<Integer>();
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -756,7 +755,7 @@ public class OrderController extends PCKBaseController {
 
         Result<Integer> result = new Result<Integer>();
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -791,7 +790,7 @@ public class OrderController extends PCKBaseController {
 
         Result<Integer> result = new Result<Integer>();
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -826,7 +825,7 @@ public class OrderController extends PCKBaseController {
 
         Result<Integer> result = new Result<Integer>();
 
-        ////todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             return result.error(ExceptionEnum.NOT_LOGIN);
         }
@@ -868,7 +867,7 @@ public class OrderController extends PCKBaseController {
             return mv;
         }
 
-        //todo 校验登录
+        //校验登录
         if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
             log.warn("未登录");
             ModelAndView mv = new ModelAndView("redirect:/error.htm?errorMsg=not_login");

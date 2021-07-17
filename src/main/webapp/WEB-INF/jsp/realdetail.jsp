@@ -181,8 +181,8 @@
 
 
                                 <hr />
-                                <div class="form-group row">
-                                    <label  class="col-sm-2 col-form-label">下单说明：</label>
+                                <%--<div class="form-group row">
+                                    <label  class="col-sm-2 col-form-label">免责声明：</label>
                                     <div class="col-sm-10">
                                         <p style="font-size: 12px;color: red;">1、为了防止卖家不发货，卖家已缴保证金。产生纠纷由保证金账户垫付，请放心交易；</p>
                                         <p style="font-size: 14px;color: red;">下单交易流程：</p>
@@ -190,7 +190,32 @@
                                         <p style="font-size: 12px;color: red;">2、卖家确认到账后，卖家发货，并通知买家确认发货；如果30分钟对方未响应，可以发起退款；卖家和平台会在24小时内会处理。</p>
                                         <p style="font-size: 12px;color: red;">3、买家收到货后，需确认收货。至此交易流程完毕</p>
                                     </div>
+                                </div>--%>
+                                <div class="form-group row">
+                                    <p style="font-size: 12px;"><span style="color: red">免责声明</span>：为了防止卖家不发货，卖家<span style="color: red">已缴保证金</span>。产生纠纷由保证金账户垫付（<span style="color: red">请用ronin
+                                    </span>交易,钱包交易有交易流水，其他交易或场外交易本平台不保证安全，<span style="color: red">产生的损失，自行担责</span>。）</p>
                                 </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-10">
+
+                                        <p style="font-size: 14px;">买家买东西处理流程：</p>
+                                        <p style="font-size: 12px;">1、买家发起订单<span style="color: red">（30分未付款，自动关闭）</span></p>
+                                        <p style="font-size: 12px;">2、买家付款，确认支付（未付款点击付款，将被拉入<span style="color: red">黑名单</span>。）</p>
+                                        <p style="font-size: 12px;">3、买家付款后，卖家确认发货（6小时内不确认发货，自动发起退款申请）</p>
+                                        <p style="font-size: 12px;">4、买家确认收货。<span style="color: red">（2天内不确认收货或发起退款申请，系统自动收货）</span></p>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="form-group row">
+                                    <div class="col-sm-10">
+                                        <p style="font-size: 14px;">买家卖东西处理流程：</p>
+                                        <p style="font-size: 12px;">1、买家发起订单<span style="color: red">（30分未付款，自动关闭）</span></p>
+                                        <p style="font-size: 12px;">2、买家发货，确认已发货（如果未发货点击已发货，将被拉入<span style="color: red">黑名单</span>。）</p>
+                                        <p style="font-size: 12px;">3、买家发货后，卖家确认付款（6小时内不确认付款，自动发起退货申请）</p>
+                                        <p style="font-size: 12px;">4、买家确认收款。<span style="color: red">（2天内不确认收款或发起退货申请，系统自动确认收款）</span></p>
+                                    </div>
+                                </div>
+
                                 <hr />
                                 <div class="form-group row">
                                     <label  class="col-sm-2 col-form-label">购买数量(SLP最少交易100个)</label>
@@ -202,7 +227,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label"></label>
                                     <div class="col-sm-10">
-                                        <button type="button" class="btn btn-dark shadow-dark px-5"  onclick="void(0);" id = "orderButton">立即下单</button>
+                                        <button type="button" class="btn btn-dark shadow-dark px-5"  onclick="void(0);" id = "orderButton">立即下单（默认认可以上声明）</button>
                                     </div>
                                 </div>
                             </form>

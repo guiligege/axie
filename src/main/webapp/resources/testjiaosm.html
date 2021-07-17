@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+    <title>播放器例子-封面</title>
+
+</head>
+<body>
+<div id="dplayer"></div>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="DPlayer.min.js"></script>
+
+<script>
+    const dp = new DPlayer({
+        container: document.getElementById('dplayer'),
+        video: {
+            url: 'demo.m3u8',
+            type: 'hls'
+        }
+    });
+
+</script>
+</body>
+</html>

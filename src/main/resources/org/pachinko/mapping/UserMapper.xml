@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pachinko.dao.IUserDao">
+    <resultMap id="BaseResultMap" type="org.pachinko.entity.User">
+
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="nick" jdbcType="VARCHAR" property="nick" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="ronin" jdbcType="VARCHAR" property="ronin" />
+
+        <result column="tag" jdbcType="VARCHAR" property="tag" />
+        <result column="sell_count" jdbcType="INTEGER" property="sellCount" />
+        <result column="sell_fail_count" jdbcType="INTEGER" property="sellFailCount" />
+
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="deposit" jdbcType="DECIMAL" property="deposit" />
+
+        <result column="percentage" jdbcType="INTEGER" property="percentage" />
+        <result column="daili_code" jdbcType="VARCHAR" property="dailiCode" />
+        <result column="my_daily_code" jdbcType="VARCHAR" property="myDailyCode" />
+
+        <result column="created" jdbcType="TIMESTAMP" property="created" />
+        <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+        <result column="settlement_time" jdbcType="TIMESTAMP" property="settlementTime" />
+    </resultMap>
+
+
+
+    <insert id="insert" parameterType="org.pachinko.entity.User">
+        insert into t_user (nick,
+                          password,
+                          email,
+                          ronin,
+
+                          status,
+                          type,
+                          deposit,
+
+                          percentage ,
+                          daili_code,
+                          my_daily_code
+                          )
+        values (#{nick},
+                #{password},
+                #{email},
+                #{ronin},
+
+                #{status},
+                #{type},
+                #{deposit},
+
+                #{percentage},
+                #{dailiCode},
+                #{myDailyCode}
+                )
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        update t_user
+        set status = 0
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+
+    <update id="updateByPrimaryKey" parameterType="org.pachinko.entity.User">
+        update t_user
+        set
+            <if test="sellCount != null">
+                sell_count = #{sellCount},
+            </if>
+            <if test="sellFailCount != null">
+                sell_fail_count = #{sellFailCount},
+            </if>
+            <if test="tag != null">
+                tag = #{tag},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="deposit != null">
+                deposit = #{deposit},
+            </if>
+            <if test="percentage != null">
+                percentage = #{percentage},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            updated = now()
+        where id = #{id}
+    </update>
+
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from t_user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+
+    <select id="selectByNick" parameterType="java.lang.String" resultType="org.pachinko.entity.User">
+        select *
+        from t_user
+        where nick = #{nick}
+    </select>
+
+
+    <select id="selectByLoginId" parameterType="java.lang.String" resultType="org.pachinko.entity.User">
+        select *
+        from t_user
+        where ronin = #{ronin,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="selectByDaili" parameterType="java.lang.String" resultType="org.pachinko.entity.User">
+        select *
+        from t_user
+        where daili_code = #{dailiCode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectDailiByCode" parameterType="java.lang.String" resultType="org.pachinko.entity.User">
+        select *
+        from t_user
+        where my_daily_code = #{dailiCode,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="countUserByDailyCode" parameterType="java.lang.String" resultType="java.lang.Integer" >
+        select count(1)
+        from t_user
+        where daili_code = #{dailiCode,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pachinko.dao.IProductDao">
+    <resultMap id="BaseResultMap" type="org.pachinko.entity.Product">
+
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="description" jdbcType="VARCHAR" property="desc" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="sub_type" jdbcType="INTEGER" property="subType" />
+
+        <result column="outer_id" jdbcType="VARCHAR" property="outerId" />
+        <result column="outer_url" jdbcType="VARCHAR" property="outerUrl" />
+        <result column="outer_img" jdbcType="VARCHAR" property="outerImg" />
+
+        <result column="seller_id" jdbcType="INTEGER" property="sellerId" />
+        <result column="seller_nick" jdbcType="VARCHAR" property="sellNick" />
+        <result column="sell_ronin" jdbcType="VARCHAR" property="sellRonin" />
+
+        <result column="single_price" jdbcType="DECIMAL" property="singlePrice" />
+        <result column="show_price" jdbcType="DECIMAL" property="showPrice" />
+        <result column="min_sell_count" jdbcType="INTEGER" property="minSellAccount" />
+        <result column="total_count" jdbcType="INTEGER" property="totalCount" />
+        <result column="lock_count" jdbcType="INTEGER" property="lockCount" />
+
+        <result column="is_egg" jdbcType="INTEGER" property="isEgg" />
+        <result column="product_mode" jdbcType="INTEGER" property="productMode" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="created" jdbcType="TIMESTAMP" property="created" />
+        <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+    </resultMap>
+
+    <insert id="insert" parameterType="org.pachinko.entity.Product">
+        insert into t_product (
+                          name,
+                          description,
+                          type,
+                          sub_type,
+                          outer_id,
+                          outer_url,
+                          outer_img,
+                          seller_id,
+                          seller_nick,
+                          sell_ronin,
+                          single_price,
+                          show_price,
+                          min_sell_count,
+                          total_count,
+                          lock_count,
+                          is_egg,
+                          product_mode,
+                          status,
+                          created,
+                          updated
+                          )
+        values (#{name},
+                #{desc},
+                #{type},
+                #{subType},
+                #{outerId},
+                #{outerUrl},
+                #{outerImg},
+                #{sellerId},
+                #{sellNick},
+                #{sellRonin},
+                #{singlePrice},
+                #{showPrice},
+                #{minSellAccount},
+                #{totalCount},
+                #{lockCount},
+                #{isEgg},
+                #{productMode},
+                #{status},
+                now(),
+                now()
+                )
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update t_product
+        set status = 0
+        where id = #{id}
+    </delete>
+
+    <update id="updateByPrimaryKey" parameterType="org.pachinko.entity.Product">
+        update t_product
+        set
+            <if test="singlePrice != null">
+                single_price = #{singlePrice},
+            </if>
+            <if test="showPrice != null">
+                show_price = #{showPrice},
+            </if>
+            <if test="isEgg != null">
+                is_egg = #{isEgg},
+            </if>
+            <if test="totalCount != null">
+                total_count = #{totalCount},
+            </if>
+            <if test="desc != null">
+                description = #{desc},
+            </if>
+            <if test="lockCount != null">
+                lock_count = #{lockCount},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="outerId != null">
+                outer_id = #{outerId},
+            </if>
+            <if test="outerUrl != null">
+                outer_url = #{outerUrl},
+            </if>
+            <if test="outerImg != null">
+                outer_img = #{outerImg},
+            </if>
+            updated = now()
+        where id = #{id}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select *
+        from t_product
+        where id = #{id}
+    </select>
+
+    <sql id="pageQueryWhereCause">
+        <where>
+            <if test="sellerId != null">
+                AND seller_id = #{sellerId}
+            </if>
+
+            <if test="productType != null">
+                AND type = #{productType}
+            </if>
+            <if test="subType != null">
+                AND sub_type = #{subType}
+            </if>
+            <if test="isEgg != null">
+                AND is_egg = #{isEgg}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="productMode != null">
+                AND product_mode = #{productMode}
+            </if>
+
+        </where>
+    </sql>
+
+
+    <select id="pageQueryProductCount" parameterType="org.pachinko.dto.ProductPageQuery" resultType="java.lang.Integer" >
+        SELECT
+          count(id)
+        FROM  t_product
+        <include refid="pageQueryWhereCause"/>
+        <if test="orderBy == 1">
+            order by single_price asc
+        </if>
+        <if test="orderBy ==2 ">
+            order by single_price desc
+        </if>
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+    <select id="pageQueryProduct" parameterType="org.pachinko.dto.ProductPageQuery" resultMap="BaseResultMap">
+        SELECT
+          *
+        FROM  t_product
+        <include refid="pageQueryWhereCause"/>
+        <if test="orderBy == 1">
+            order by single_price asc
+        </if>
+        <if test="orderBy ==2 ">
+            order by single_price desc
+        </if>
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+
+    <select id="queryProductListBySellerId" parameterType="org.pachinko.dto.ProductPageQuery" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM  t_product
+        <include refid="pageQueryWhereCause"/>
+
+        <if test="orderBy == 1">
+            order by single_price asc
+        </if>
+        <if test="orderBy ==2 ">
+            order by single_price desc
+        </if>
+        LIMIT 50
+    </select>
+
+
+
+</mapper>

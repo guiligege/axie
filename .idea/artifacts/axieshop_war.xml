@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="axieshop:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="ROOT.war">
+      <element id="artifact" artifact-name="axieshop:war exploded" />
+    </root>
+  </artifact>
+</component>

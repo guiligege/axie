@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pachinko.dao.IActionLogDao">
+    <resultMap id="ActionBaseResultMap" type="org.pachinko.entity.ActionLog">
+
+        <id column="id" jdbcType="BIGINT" property="id" />
+
+        <result column="order_id" jdbcType="BIGINT" property="orderId" />
+        <result column="account_id" jdbcType="INTEGER" property="accountId" />
+        <result column="nick" jdbcType="VARCHAR" property="nick" />
+        <result column="role" jdbcType="VARCHAR" property="role" />
+
+        <result column="action_type" jdbcType="INTEGER" property="actionType" />
+        <result column="action_name" jdbcType="VARCHAR" property="actionName" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+
+        <result column="created" jdbcType="TIMESTAMP" property="created" />
+        <result column="action_group" jdbcType="TIMESTAMP" property="actionGroup" />
+    </resultMap>
+
+    <insert id="insert" parameterType="org.pachinko.entity.ActionLog" useGeneratedKeys="true" keyProperty="id">
+        insert into t_action_log (
+                          order_id,
+                          account_id,
+                          nick,
+                          role,
+
+                          action_type,
+                          action_name,
+                          content,
+
+                          created,
+                          updated
+                          )
+        values (#{orderId},
+                #{accountId},
+                #{nick},
+                #{role},
+
+                #{actionType},
+                #{actionName},
+                #{content},
+
+                now(),
+                now()
+                )
+    </insert>
+
+
+    <select id="selectActionLogByOrderId"  parameterType="java.lang.Long"  resultMap="ActionBaseResultMap">
+        SELECT
+          *
+        FROM  t_action_log
+
+        where order_id = #{orderId} and  action_group = 0
+        order by created desc
+        LIMIT 100
+    </select>
+
+
+</mapper>

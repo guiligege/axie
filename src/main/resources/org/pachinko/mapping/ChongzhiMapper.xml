@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pachinko.dao.IChongzhiDao">
+    <resultMap id="BaseResultMap" type="org.pachinko.entity.ChongZhi">
+
+        <id column="id" jdbcType="BIGINT" property="id" />
+
+        <result column="seller_id" jdbcType="INTEGER" property="sellerId" />
+        <result column="seller_nick" jdbcType="VARCHAR" property="sellerNick" />
+        <result column="seller_ronin" jdbcType="VARCHAR" property="sellerRonin" />
+
+        <result column="platform_ronin" jdbcType="VARCHAR" property="platformRonin" />
+
+        <result column="chongzhi_price" jdbcType="DECIMAL" property="chongzhiPrice" />
+
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="created" jdbcType="TIMESTAMP" property="created" />
+        <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+    </resultMap>
+
+    <insert id="insert" parameterType="org.pachinko.entity.ChongZhi" useGeneratedKeys="true" keyProperty="id">
+        insert into t_chongzhi (
+
+                          seller_id,
+                          seller_nick,
+                          seller_ronin,
+
+                          platform_ronin,
+                          chongzhi_price,
+
+                          status,
+                          created,
+                          updated
+                          )
+        values (
+                #{sellerId},
+                #{sellerNick},
+                #{sellerRonin},
+
+                #{platformRonin},
+                #{chongzhiPrice},
+
+                #{status},
+                now(),
+                now()
+                )
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="org.pachinko.entity.ChongZhi">
+        update t_chongzhi
+        set
+            <if test="status != null">
+                status = #{status},
+            </if>
+            updated = now()
+        where id = #{id}
+    </update>
+
+    <select id="selectBySellerId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from t_chongzhi
+        where seller_id = #{sellerId}
+        and status in(2)
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select *
+        from t_chongzhi
+        where id = #{id}
+    </select>
+
+    <select id="queryChongZhiList"  resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM  t_chongzhi
+        where status in(1,2,3,4)
+        order by created desc
+        LIMIT 200
+    </select>
+
+
+</mapper>

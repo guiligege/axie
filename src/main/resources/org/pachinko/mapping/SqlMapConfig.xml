@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <!-- 对象别名 ，用在mapper里面代替整个对象的访问-->
+  <settings>
+    <setting name="mapUnderscoreToCamelCase" value="true"/>
+  </settings>
+
+  <mappers>
+    <!-- 数据库映射文件 -->
+    <mapper resource="org/pachinko/mapping/UserMapper.xml"/>
+    <mapper resource="org/pachinko/mapping/ProductMapper.xml"/>
+    <mapper resource="org/pachinko/mapping/OrderMapper.xml"/>
+    <mapper resource="org/pachinko/mapping/FeeDetailMapper.xml"/>
+    <mapper resource="org/pachinko/mapping/ActionLogMapper.xml"/>
+    <mapper resource="org/pachinko/mapping/ChongzhiMapper.xml"/>
+    <mapper resource="org/pachinko/mapping/WithdrawMapper.xml"/>
+  </mappers>
+
+</configuration>

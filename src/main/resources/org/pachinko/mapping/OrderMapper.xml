@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pachinko.dao.IOrderDao">
+    <resultMap id="BaseResultMap" type="org.pachinko.entity.Order">
+
+        <id column="id" jdbcType="BIGINT" property="id" />
+
+        <result column="product_id" jdbcType="BIGINT" property="productId" />
+        <result column="product_name" jdbcType="VARCHAR" property="productName" />
+        <result column="product_type" jdbcType="VARCHAR" property="productType" />
+
+        <result column="seller_id" jdbcType="INTEGER" property="sellerId" />
+        <result column="seller_nick" jdbcType="VARCHAR" property="sellerNick" />
+        <result column="seller_ronin" jdbcType="VARCHAR" property="sellerRonin" />
+
+        <result column="buyer_id" jdbcType="INTEGER" property="buyerId" />
+        <result column="buyer_nick" jdbcType="VARCHAR" property="buyerNick" />
+        <result column="buyer_ronin" jdbcType="VARCHAR" property="buyerRonin" />
+
+        <result column="single_price" jdbcType="DECIMAL" property="singlePrice" />
+        <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
+        <result column="buy_count" jdbcType="INTEGER" property="buyCount" />
+        <result column="mode" jdbcType="INTEGER" property="mode" />
+
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="created" jdbcType="TIMESTAMP" property="created" />
+        <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+    </resultMap>
+
+    <insert id="insert" parameterType="org.pachinko.entity.Order" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order (
+                          product_id,
+                          product_name,
+                          product_type,
+
+                          seller_id,
+                          seller_nick,
+                          seller_ronin,
+
+                          buyer_id,
+                          buyer_nick,
+                          buyer_ronin,
+
+                          single_price,
+                          total_price,
+                          buy_count,
+                          mode,
+
+                          status,
+                          created,
+                          updated
+                          )
+        values (#{productId},
+                #{productName},
+                #{productType},
+
+                #{sellerId},
+                #{sellerNick},
+                #{sellerRonin},
+
+                #{buyerId},
+                #{buyerNick},
+                #{buyerRonin},
+
+                #{singlePrice},
+                #{totalPrice},
+                #{buyCount},
+                #{mode},
+
+                #{status},
+                now(),
+                now()
+                )
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update t_order
+        set status = 0
+        where id = #{id}
+    </delete>
+
+    <update id="updateByPrimaryKey" parameterType="org.pachinko.entity.Order">
+        update t_order
+        set
+            <if test="status != null">
+                status = #{status},
+            </if>
+            updated = now()
+        where id = #{id}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select *
+        from t_order
+        where id = #{id}
+    </select>
+
+
+    <select id="queryOrderListByUserId" parameterType="org.pachinko.dto.OrderPageQuery" resultMap="BaseResultMap">
+        SELECT
+          *
+        FROM  t_order
+        <include refid="pageQueryWhereCause"/>
+
+        order by created desc
+        LIMIT 100
+    </select>
+
+    <sql id="pageQueryWhereCause">
+        <where>
+            <if test="sellerId != null">
+                AND seller_id = #{sellerId}
+            </if>
+            <if test="buyerId != null">
+                AND buyer_id = #{buyerId}
+            </if>
+
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+
+            <if test="someStatus != null">
+                AND status in
+                <foreach collection="someStatus" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+        </where>
+    </sql>
+
+</mapper>

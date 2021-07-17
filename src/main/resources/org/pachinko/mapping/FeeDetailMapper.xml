@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pachinko.dao.IFeeDetailDao">
+    <resultMap id="BaseResultMap" type="org.pachinko.entity.FeeDetail">
+
+        <id column="id" jdbcType="BIGINT" property="id" />
+
+        <result column="order_id" jdbcType="BIGINT" property="orderId" />
+        <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
+
+        <result column="percent" jdbcType="INTEGER" property="percent" />
+        <result column="user_percent" jdbcType="INTEGER" property="userPercent" />
+        <result column="invitation_user_id" jdbcType="INTEGER" property="invitationUserId" />
+        <result column="fee" jdbcType="DECIMAL" property="fee" />
+        <result column="user_fee" jdbcType="DECIMAL" property="userFee" />
+
+        <result column="seller_id" jdbcType="INTEGER" property="sellerId" />
+        <result column="seller_nick" jdbcType="VARCHAR" property="sellNick" />
+        <result column="sell_ronin" jdbcType="VARCHAR" property="sellRonin" />
+
+        <result column="buyer_id" jdbcType="INTEGER" property="buyerId" />
+        <result column="buyer_nick" jdbcType="VARCHAR" property="buyerNick" />
+        <result column="buyer_ronin" jdbcType="VARCHAR" property="buyerRonin" />
+
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="created" jdbcType="TIMESTAMP" property="created" />
+        <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+    </resultMap>
+
+    <insert id="insert" parameterType="org.pachinko.entity.FeeDetail">
+        insert into t_fee (
+                          order_id,
+                          total_price,
+
+                          percent,
+                          user_percent,
+                          invitation_user_id,
+                          fee,
+                          user_fee,
+
+                          seller_id,
+                          seller_nick,
+                          sell_ronin,
+
+                          buyer_id,
+                          buyer_nick,
+                          buyer_ronin,
+
+                          status,
+                          created,
+                          updated
+                          )
+        values (#{orderId},
+                #{totalPrice},
+
+                #{percent},
+                #{userPercent},
+                #{invitationUserId},
+                #{fee},
+                #{userFee},
+
+                #{sellerId},
+                #{sellNick},
+                #{sellRonin},
+
+                #{buyerId},
+                #{buyerNick},
+                #{buyerRonin},
+
+                #{status},
+                now(),
+                now()
+                )
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update t_fee
+        set status = 0
+        where id = #{id}
+    </delete>
+
+    <update id="updateByPrimaryKey" parameterType="org.pachinko.entity.FeeDetail">
+        update t_fee
+        set
+            <if test="status != null">
+                status = #{status},
+            </if>
+            updated = now()
+        where id = #{id}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select *
+        from t_fee
+        where invitation_user_id = #{invitationUserId} and status=#{status}
+    </select>
+
+</mapper>

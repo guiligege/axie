@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>Chat WebSocket</title>
+    <meta charset="UTF-8">
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/sockjs.js"></script>
+    <script src="js/stomp.js"></script>
+    <script type="text/javascript">
+        var stompClient = null;
+
+        function setConnected(connected) {
+            document.getElementById('connect').disabled = connected;
+            document.getElementById('disconnect').disabled = !connected;
+            document.getElementById('conversationDiv').style.visibility
+                = connected ? 'visible' : 'hidden';
+            document.getElementById('response').innerHTML = '';
+        }
+
+        function connect() {
+            $.ajax(
+                {
+                    method: "POST",
+                    url: "/user/login/wechat.htm",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({
+                        wechat: $("#wechat").val(),
+                        nickname: $("#nickname").val(),
+                        avatarUrl: "htt"
+                    }),
+                }).done(function(data) {
+                    console.log(data);
+
+                    var game = $("input[name='game']:checked").val();
+                    $.ajax(
+                        {
+                            method: "GET",
+                            url: "/" + game + "/info.htm",
+                        }).done(function (data) {
+                            console.log(data);
+                            if (data && data.code == 200) {
+                                $("#onlineusercount").val(data.data.onlineUserCount);
+                            }
+                    });
+                    var socket = new SockJS('/pachinko');
+                    stompClient = Stomp.over(socket);
+                    stompClient.connect({}, function(frame) {
+                        setConnected(true);
+                        console.log('Connected: ' + frame);
+                        stompClient.subscribe('/topic/lottery/bought/' + game, function(messageOutput) {
+                            showMessageOutput(JSON.parse(messageOutput.body));
+                        });
+                        stompClient.subscribe('/topic/common/user/count_updated', function(messageOutput) {
+                            var data = JSON.parse(messageOutput.body);
+                            $("#onlineusercount").val(data.data.onlineUserCount);
+                        });
+                        stompClient.subscribe('/topic/lifecycle/' + game + '', function(messageOutput) {
+                            showLifecycleMessage(JSON.parse(messageOutput.body));
+                        });
+                    });
+            });
+        }
+
+        function disconnect() {
+            if(stompClient != null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+            console.log("Disconnected");
+        }
+
+        function sendMessage() {
+            var from = document.getElementById('from').value;
+            var text = document.getElementById('text').value;
+            stompClient.send("/app/test", {},
+                JSON.stringify({'fromUserId':from, 'lotteryName':'BJSSC', 'message': text}));
+        }
+
+        function showMessageOutput(messageOutput) {
+            var response = document.getElementById('response');
+            var p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+            p.appendChild(document.createTextNode(messageOutput.fromUserId + ": "
+                + messageOutput.lotteryName + " (" + messageOutput.message + ")"));
+            response.appendChild(p);
+        }
+
+        function showLifecycleMessage(message) {
+            var response = document.getElementById('response');
+            var p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+            p.appendChild(document.createTextNode(message.lotteryName + " : " + message.state + " : " + message.currentNo));
+            response.appendChild(p);
+        }
+    </script>
+</head>
+<body onload="disconnect()">
+<div>
+    <div>
+        <input type="text" id="wechat" placeholder="input wechat id"/>
+        <input type="text" id="nickname" placeholder="input nickname"/>
+    </div>
+    <br />
+    在线人数：<span id="onlineusercount">0</span>
+    <br />
+    <fieldset>
+        <legend>Select a game</legend>
+        <div>
+            <input type="radio" id="bjssc" name="game" value="bjssc" checked />
+            <label for="bjssc">北京时时彩</label>
+        </div>
+        <div>
+            <input type="radio" id="cqssc" name="game" value="cqssc" />
+            <label for="cqssc">重庆时时彩</label>
+        </div>
+        <div>
+            <input type="radio" id="txffc" name="game" value="txffc" />
+            <label for="cqssc">腾讯分分彩</label>
+        </div>
+        <div>
+            <input type="radio" id="bjsc" name="game" value="bjsc" />
+            <label for="cqssc">北京赛车</label>
+        </div>
+        <div>
+            <input type="radio" id="jssc" name="game" value="jssc" />
+            <label for="cqssc">急速赛车</label>
+        </div>
+        <div>
+            <input type="radio" id="xyft" name="game" value="xyft" />
+            <label for="cqssc">幸运飞艇</label>
+        </div>
+        <div>
+            <input type="radio" id="bj28" name="game" value="bj28" />
+            <label for="cqssc">北京28</label>
+        </div>
+        <div>
+            <input type="radio" id="jnd28" name="game" value="jnd28" />
+            <label for="cqssc">加拿大28</label>
+        </div>
+        <div>
+            <input type="radio" id="jlk3" name="game" value="jlk3" />
+            <label for="cqssc">吉林快3</label>
+        </div>
+    </fieldset>
+    <br />
+    <div>
+        <button id="connect" onclick="connect();">Connect</button>
+        <button id="disconnect" disabled="disabled" onclick="disconnect();">
+            Disconnect
+        </button>
+    </div>
+    <br />
+    <div id="conversationDiv">
+        <!--
+        <input type="text" id="text" placeholder="Write a message..."/>
+        <button id="sendMessage" onclick="sendMessage();">Send</button>
+        -->
+        <p id="response"></p>
+    </div>
+</div>
+
+</body>
+</html>

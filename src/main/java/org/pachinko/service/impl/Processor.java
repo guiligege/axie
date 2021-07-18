@@ -21,5 +21,9 @@ public class Processor implements InitializingBean {
         //从diamond取定时任务时间。
         //Timer timer = new Timer();
         //timer.schedule(coinTimerTask, 200L, TIME);
+
+        //分账定时任务
+        //Timer timer = new Timer();
+        //timer.schedule(coinTimerTask, 200L, TIME);
     }
 }

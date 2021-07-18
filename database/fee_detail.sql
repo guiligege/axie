@@ -20,7 +20,7 @@ CREATE TABLE `t_fee` (
   `buyer_nick`  varchar(64) NOT NULL DEFAULT 0 COMMENT '买家nick',
   `buyer_ronin` varchar(120) NOT NULL DEFAULT 0 COMMENT '买家ronin',
 
-  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '分账状态（待分账：0，已分账：1）',
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '分账状态（未分给邀请人：0，已分给邀请人：1）',
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 

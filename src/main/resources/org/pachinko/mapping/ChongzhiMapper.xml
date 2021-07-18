@@ -12,6 +12,7 @@
         <result column="platform_ronin" jdbcType="VARCHAR" property="platformRonin" />
 
         <result column="chongzhi_price" jdbcType="DECIMAL" property="chongzhiPrice" />
+        <result column="fee_price" jdbcType="DECIMAL" property="feePrice" />
 
         <result column="status" jdbcType="TINYINT" property="status" />
         <result column="created" jdbcType="TIMESTAMP" property="created" />
@@ -51,6 +52,9 @@
         set
             <if test="status != null">
                 status = #{status},
+            </if>
+            <if test="feePrice != null">
+                fee_price = #{feePrice},
             </if>
             updated = now()
         where id = #{id}

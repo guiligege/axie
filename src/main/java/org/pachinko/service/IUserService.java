@@ -69,6 +69,6 @@ public interface IUserService {
      * @param ronin
      * @return
      */
-    boolean updateTag(String ronin);
+    boolean updateTag(String ronin,boolean ischongzhi);
 
 }

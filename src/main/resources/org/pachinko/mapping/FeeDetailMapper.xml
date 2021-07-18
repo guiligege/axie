@@ -73,12 +73,6 @@
                 )
     </insert>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        update t_fee
-        set status = 0
-        where id = #{id}
-    </delete>
-
     <update id="updateByPrimaryKey" parameterType="org.pachinko.entity.FeeDetail">
         update t_fee
         set
@@ -92,7 +86,12 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select *
         from t_fee
-        where invitation_user_id = #{invitationUserId} and status=#{status}
+        where order_id = #{orderId}
     </select>
 
+    <select id="selectListByInvitationUserId" parameterType="org.pachinko.dto.FeeParam" resultMap="BaseResultMap">
+        select *
+        from t_fee
+        where invitation_user_id = #{inviteId} and status=0 limit 200
+    </select>
 </mapper>

@@ -105,7 +105,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public boolean updateTag(String ronin) {
+    public boolean updateTag(String ronin,boolean ischongzhi) {
 
         User roninuser =  this.getByRonin(ronin);
         if(null == roninuser){
@@ -113,7 +113,12 @@ public class UserServiceImpl implements IUserService {
             log.warn("user not exist ronin is:{}",ronin);
             return false;
         }
-        roninuser.setTag(ChongZhi.CHONGZHI_SUCCESS_TAG);
+        if(ischongzhi){
+            roninuser.setTag(ChongZhi.CHONGZHI_SUCCESS_TAG);
+        }else{
+            roninuser.setTag(ChongZhi.TIXIAN_SUCCESS_TAG);
+        }
+
         userDao.updateByPrimaryKey(roninuser);
         return true;
     }

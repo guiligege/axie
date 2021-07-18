@@ -135,4 +135,21 @@ public interface IOrderService {
     BigDecimal getFee(Integer sellerId);
 
     List<Order> queryOrderList(OrderPageQuery pageQuery);
+
+    List<Order> getHasFinishOrders(Integer sellerId);
+
+    /**
+     * 分账
+     * @param
+     * @return
+     */
+    //int fenzhangOrder();
+
+    int updateByPrimaryKey(Order order);
+
+    /**
+     * 查询最近几天的已完成，未分账订单
+     * @return
+     */
+    List<Order> queryLastOrders();
 }

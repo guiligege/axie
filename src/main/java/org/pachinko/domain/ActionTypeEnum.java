@@ -61,7 +61,10 @@ public enum ActionTypeEnum {
     //充值
     PLATFORM_NO_PAY("未到账",31),
 
-    //充值
+    //等待提现
+    PLATFORM_WITHDRAW_WAIT("等待提现",32),
+
+    //提现成功
     PLATFORM_WITHDRAW_OK("提现成功",32),
 
     //发起充值
@@ -69,6 +72,9 @@ public enum ActionTypeEnum {
 
     //撤销
     SYSTEM_CANCEL("系统撤销",34),
+
+    FEN_ZHANG("分账",35),
+
 
     ;
 

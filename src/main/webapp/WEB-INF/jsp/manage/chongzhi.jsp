@@ -64,53 +64,55 @@
 
                             <hr>
                             <form action="">
-                                <div class="form-group row">
-                                    <label  class="col-sm-2 col-form-label">保证金说明：</label>
-                                    <div class="col-sm-10">
-                                        <p style="font-size: 12px;color: red;">1、为了防止卖家不发货，卖家需要交保证金。如果产生纠纷，卖家责任（未发货/货不对板等），将由保证金赔付；</p>
-                                        <p style="font-size: 12px;color: red;">2、收保证金仅维护游戏交易双方权益，2天后无未完结订单可申请提现，平台会在24小时内处理。</p>
-                                        <p style="font-size: 12px;color: red;">3、卖家最大可售卖商品金额 == 卖家保证金。</p>
-                                        <p style="font-size: 12px;color: red;">4、交保证金后，1个工作日内开通售卖服务。</p>
-                                        <p style="font-size: 12px;color: red;">6、卖家发货后，买家需确认收货或申请退款。如果24小时内未确认收货或申请退款，默认确认收货。</p>
+
+                                    <div class="form-group row">
+                                        <label  class="col-sm-2 col-form-label">保证金说明：</label>
+                                        <div class="col-sm-10">
+                                            <p style="font-size: 12px;color: red;">1、为了防止卖家不发货，卖家需要交保证金。如果产生纠纷，卖家责任（未发货/货不对板等），将由保证金赔付；</p>
+                                            <p style="font-size: 12px;color: red;">2、收保证金仅维护游戏交易双方权益，2天后无未完结订单可申请提现，平台会在24小时内处理。</p>
+                                            <p style="font-size: 12px;color: red;">3、卖家最大可售卖商品金额 == 卖家保证金。</p>
+                                            <p style="font-size: 12px;color: red;">4、交保证金后，1个工作日内开通售卖服务。</p>
+                                            <p style="font-size: 12px;color: red;">6、卖家发货后，买家需确认收货或申请退款。如果48小时内未确认收货或申请退款，默认确认收货。</p>
+                                        </div>
                                     </div>
-                                </div>
 
 
-                                <div class="form-group row" >
-                                    <label for="weth" class="col-sm-2 col-form-label">保证金（单位WETH，通过ronin充值）</label>
-                                    <div class="col-sm-10">
-                                        <select name="subtype" id="weth" style="font-size: 16px;margin-top: 10px;width: 200px;">
-                                            <option value="0.5" selected="selected">0.5 WETH</option>
-                                            <option value="1">1 WETH</option>
-                                            <option value="2">2 WETH</option>
-                                            <option value="5">5 WETH</option>
-                                        </select>
+                                    <div class="form-group row" >
+                                        <label for="weth" class="col-sm-2 col-form-label">保证金（单位WETH，通过ronin充值）</label>
+                                        <div class="col-sm-10">
+                                            <select name="subtype" id="weth" style="font-size: 16px;margin-top: 10px;width: 200px;">
+                                                <option value="0.5" selected="selected">0.5 WETH</option>
+                                                <option value="1">1 WETH</option>
+                                                <option value="2">2 WETH</option>
+                                                <option value="5">5 WETH</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group row" >
-                                    <label for="myronin" class="col-sm-2 col-form-label" style="color: red">我的ronin钱包（用该钱包转账）</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" disabled class="form-control"  id="myronin" value="${myronin}">
+                                    <div class="form-group row" >
+                                        <label for="myronin" class="col-sm-2 col-form-label" style="color: red">我的ronin钱包（用该钱包转账）</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" disabled class="form-control"  id="myronin" value="${myronin}">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group row">
-                                    <label for="platformronin" class="col-sm-2 col-form-label" style="color: red">平台ronin钱包</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" disabled class="form-control"  id="platformronin" value="${platformronin}">
-                                        <button type="button" style="margin-top: 5px;font-size: 12px;color: red" id="sendGoods">
-                                            复制平台钱包 - 去ronin转账
-                                        </button>
+                                    <div class="form-group row">
+                                        <label for="platformronin" class="col-sm-2 col-form-label" style="color: red">平台ronin钱包</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" disabled class="form-control"  id="platformronin" value="${platformronin}">
+                                            <button type="button" style="margin-top: 5px;font-size: 12px;color: red" id="sendGoods">
+                                                复制平台钱包 - 去ronin转账
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group row" style="margin-top: 40px;">
-                                    <label class="col-sm-2 col-form-label"></label>
-                                    <div class="col-sm-10">
-                                        <button type="button" class="btn btn-dark shadow-dark px-5"  onclick="void(0);" id = "registerButton">确认已交保证金</button>
+                                    <div class="form-group row" style="margin-top: 40px;">
+                                        <label class="col-sm-2 col-form-label"></label>
+                                        <div class="col-sm-10">
+                                            <button type="button" class="btn btn-dark shadow-dark px-5"  onclick="void(0);" id = "registerButton">确认已交保证金</button>
+                                        </div>
                                     </div>
-                                </div>
+
                             </form>
                         </div>
                     </div>

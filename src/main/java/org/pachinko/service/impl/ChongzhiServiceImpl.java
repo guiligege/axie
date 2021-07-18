@@ -69,12 +69,49 @@ public class ChongzhiServiceImpl implements IChongzhiService {
             chongzhiDao.updateByPrimaryKey(chongZhi);
 
             //todo 更新用户状态。为可发布商品
-            userService.updateTag(chongZhi.getSellerRonin());
+            userService.updateTag(chongZhi.getSellerRonin(),true);
 
             //log
             ActionLog actionLog = new ActionLog();
             actionLog.buildBaseActionLog(chongZhi.getId(),chongZhi.getSellerId(),chongZhi.getSellerNick(),PLATFORM);
             actionLog.buildAction(ActionTypeEnum.PLATFORM_OK_PAY,ActionTypeEnum.PLATFORM_OK_PAY.getName());
+            actionLog.setActionGroup(1);
+            actionLogService.addActionLog(actionLog);
+        }catch (Throwable t){
+            log.error("chongzhiOk error,t",t);
+        }
+
+        return 1;
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int chongzhiFreeze(ChongzhiParam chongzhiParam){
+
+        try{
+            ChongZhi chongZhi = chongzhiDao.selectByPrimaryKey(chongzhiParam.getId());
+            if(chongZhi == null){
+                log.warn("cancelOrder order not exist!id:{}",chongzhiParam.getId());
+                return  0;
+            }
+
+            //更新充值单和 总fee
+            chongZhi.setStatus(ChongzhiStatusEnum.WAIT_TI_XIAN.getStatus());
+            chongZhi.setUpdated(new Date());
+            if(chongzhiParam.getFeePrice()!= null){
+                chongZhi.setFeePrice(chongzhiParam.getFeePrice());
+            }
+
+            chongzhiDao.updateByPrimaryKey(chongZhi);
+
+            //todo 更新用户状态。为可发布商品
+            userService.updateTag(chongZhi.getSellerRonin(),false);
+
+            //log
+            ActionLog actionLog = new ActionLog();
+            actionLog.buildBaseActionLog(chongZhi.getId(),chongZhi.getSellerId(),chongZhi.getSellerNick(),PLATFORM);
+            actionLog.buildAction(ActionTypeEnum.PLATFORM_WITHDRAW_WAIT,ActionTypeEnum.PLATFORM_WITHDRAW_WAIT.getName());
             actionLog.setActionGroup(1);
             actionLogService.addActionLog(actionLog);
         }catch (Throwable t){

@@ -49,6 +49,11 @@ public class Order {
      */
     private Integer mode;
 
+    /**
+     * 分账(0,未分账，1，已分账)
+     */
+    private Integer fenzhang;
+
   /**
    * 写入时的数据补充
    */

@@ -77,7 +77,7 @@
                                     <div class="form-group row" >
                                         <label  class="col-sm-2 col-form-label"></label>
                                         <div class="col-sm-10" style="color:red;">
-                                            您有未完成订单或未下架商品。请完结订单或下架后再提现。或已经正在提现。
+                                            您有未完成订单 或 未下架商品 或 已完成订单未分账（分账周期一天内）或 已经存在提现。请完结订单或下架后再提现。。
                                         </div>
                                     </div>
                                 </c:if>

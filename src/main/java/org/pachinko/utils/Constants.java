@@ -8,4 +8,9 @@ public class Constants {
 
     public static final String BASE_DOMAIN = "http://www.axieshop.cc:8080";
 
+    public static final int MAX_FENCHENG = 300;
+    public static final int PERCENT = 1000;
+    public static final int MIN_FENCHENG = 100;
+    public static final int PLATFORM_PERCENT = 150;
+
 }

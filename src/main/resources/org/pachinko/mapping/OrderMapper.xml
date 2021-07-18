@@ -21,6 +21,7 @@
         <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
         <result column="buy_count" jdbcType="INTEGER" property="buyCount" />
         <result column="mode" jdbcType="INTEGER" property="mode" />
+        <result column="fenzhang" jdbcType="INTEGER" property="fenzhang" />
 
         <result column="status" jdbcType="TINYINT" property="status" />
         <result column="created" jdbcType="TIMESTAMP" property="created" />
@@ -85,6 +86,9 @@
             <if test="status != null">
                 status = #{status},
             </if>
+            <if test="fenzhang != null">
+                fenzhang = #{fenzhang},
+            </if>
             updated = now()
         where id = #{id}
     </update>
@@ -127,6 +131,9 @@
 
             <if test="status != null">
                 AND status = #{status}
+            </if>
+            <if test="fenzhang != null">
+                AND fenzhang = #{fenzhang}
             </if>
 
             <if test="startTime != null">

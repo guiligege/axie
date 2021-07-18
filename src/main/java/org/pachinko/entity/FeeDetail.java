@@ -29,7 +29,7 @@ public class FeeDetail {
      */
     private int percent;
     /**
-     * 用户分账比例 默认20% - 200，高级30% -300，
+     * 用户分账比例 默认15% - 100，高级30% -300，
      */
     private int userPercent;
     /**
@@ -77,7 +77,7 @@ public class FeeDetail {
    * @param order
    * @return
    */
-  public FeeDetail buildFeeDetail(Order order,int percent,int userPercent){
+  public FeeDetail buildFeeDetail(Order order,int percent,int userPercent,Integer invitationUserId){
 
 
       FeeDetail feeDetail = new FeeDetail();
@@ -90,18 +90,28 @@ public class FeeDetail {
       }else{
         feeDetail.percent = percent;
       }
+
       if(userPercent!=0){
         feeDetail.userPercent = userPercent;
       }
+
       feeDetail.setTotalPrice(order.getTotalPrice());
       feeDetail.sellerId = order.getSellerId();
       feeDetail.sellNick = order.getSellerNick();
       feeDetail.sellRonin = order.getSellerRonin();
+
+      feeDetail.buyerId = order.getBuyerId();
+      feeDetail.buyerNick = order.getBuyerNick();
+      feeDetail.buyerRonin = order.getBuyerRonin();
+      //未发给邀请人
       feeDetail.status = 0;
 
       //获取fee
       feeDetail.fee = feeDetail.caculateFee();
       feeDetail.setUserFee(feeDetail.caculateUserFee());
+
+      //邀请人
+      feeDetail.setInvitationUserId(invitationUserId);
 
       return feeDetail;
     }
@@ -113,7 +123,7 @@ public class FeeDetail {
      */
     private BigDecimal caculateFee(){
 
-        return this.totalPrice.multiply(new BigDecimal(this.getPercent())).divide(BASE_PERCENT,6, RoundingMode.DOWN);
+        return this.totalPrice.multiply(new BigDecimal(this.getPercent())).divide(BASE_PERCENT,8, RoundingMode.DOWN);
     }
 
   /**
@@ -123,6 +133,6 @@ public class FeeDetail {
    */
   private BigDecimal caculateUserFee(){
 
-    return caculateFee().multiply(new BigDecimal(this.getUserPercent())).divide(BASE_PERCENT,6, RoundingMode.DOWN);
+    return caculateFee().multiply(new BigDecimal(this.getUserPercent())).divide(BASE_PERCENT,8, RoundingMode.DOWN);
   }
 }

@@ -34,11 +34,12 @@
             </ul>
         </li>
         <li>
-            <span onclick="clicklishi();" class="waves-effect" style="margin-left: 18px;margin-bottom: 10px;color: #7f9bcc; margin-top: 10px;">保证金</span>
+            <span onclick="clicklishi();" class="waves-effect" style="margin-left: 18px;margin-bottom: 10px;color: #7f9bcc; margin-top: 10px;">保证金&奖励</span>
 
             <ul class="sidebar-submenu menu-open" id = "lishi"  style="display: block">
                 <li><a href="/to_chongzhi.htm"  style="font-size: 12px;margin-left: 10px;">充值</a></li>
                 <li><a href="/to_tixian.htm"  style="font-size: 12px;margin-left: 10px;">提现</a></li>
+                <li><a href="/toInviteList.htm"  style="font-size: 12px;margin-left: 10px;">邀请奖励</a></li>
             </ul>
         </li>
         <%--<li>

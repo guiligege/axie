@@ -18,7 +18,7 @@ public interface IWithdrawService {
      */
     int insert(Withdraw record);
 
-    int sellerWithdraw(Withdraw record);
+    //int sellerWithdraw(Withdraw record);
 
     int platformWithdrawOk(WithdrawParam record);
 

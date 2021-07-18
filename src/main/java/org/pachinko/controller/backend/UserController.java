@@ -14,22 +14,26 @@ import org.pachinko.domain.OrderStatusEnum;
 import org.pachinko.domain.ProductStatusEnum;
 import org.pachinko.domain.Result;
 import org.pachinko.dto.ChongzhiParam;
+import org.pachinko.dto.FeeParam;
 import org.pachinko.dto.OrderPageQuery;
 import org.pachinko.dto.ProductPageQuery;
 import org.pachinko.dto.TixianParam;
 import org.pachinko.dto.UserDTO;
 import org.pachinko.dto.UserParam;
 import org.pachinko.entity.ChongZhi;
+import org.pachinko.entity.FeeDetail;
 import org.pachinko.entity.Order;
 import org.pachinko.entity.Product;
 import org.pachinko.entity.User;
 import org.pachinko.entity.Withdraw;
 import org.pachinko.exception.ExceptionEnum;
 import org.pachinko.service.IChongzhiService;
+import org.pachinko.service.IFeeDetailService;
 import org.pachinko.service.IOrderService;
 import org.pachinko.service.IProductService;
 import org.pachinko.service.IUserService;
 import org.pachinko.service.IWithdrawService;
+import org.pachinko.service.impl.IFenzhangService;
 import org.pachinko.utils.AesUtils;
 import org.pachinko.utils.CheckPermissionUtil;
 import org.pachinko.utils.Constants;
@@ -63,6 +67,12 @@ public class UserController extends PCKBaseController {
     private IProductService productService;
     @Autowired
     private IWithdrawService withdrawService;
+
+    @Autowired
+    private IFenzhangService fenzhangService;
+
+    @Autowired
+    private IFeeDetailService feeDetailService;
 
 
 
@@ -204,7 +214,15 @@ public class UserController extends PCKBaseController {
             return new ModelAndView("/error.htm?errorMsg='未登录'");
         }
 
+        //有保证金且保证金为启用状态
         UserDTO userDTO = CheckPermissionUtil.getUserDTOFromCookie(request, CookieUtils.LOGIN_COOKIE);
+        //ChongZhi sellerChongzhi =  chongzhiService.selectBySellerId(userDTO.getId());
+        //if(sellerChongzhi ==  null  || sellerChongzhi.getStatus() != ChongzhiStatusEnum.PLATFORM_OK_PAY.getStatus()){
+        //    request.setAttribute("hasChongzhi", false);
+        //}else{
+        //    request.setAttribute("hasChongzhi", true);
+        //}
+        //UserDTO userDTO = CheckPermissionUtil.getUserDTOFromCookie(request, CookieUtils.LOGIN_COOKIE);
         request.setAttribute("platformronin", Constants.PLATFORM_RONIN);
         request.setAttribute("myronin", userDTO.getRonin());
 
@@ -253,12 +271,12 @@ public class UserController extends PCKBaseController {
         }
 
         //费用计算根据用户当前的费率计算
-        BigDecimal fee = orderService.getFee(sellerId);
-        BigDecimal returnMoney = sellerChongzhi.getChongzhiPrice().subtract(fee);
+        //BigDecimal fee = orderService.getFee(sellerId);
+        BigDecimal returnMoney = sellerChongzhi.getChongzhiPrice().subtract(sellerChongzhi.getFeePrice());
 
         request.setAttribute("platformronin", Constants.PLATFORM_RONIN);
         request.setAttribute("myronin", userRonin);
-        request.setAttribute("fee", fee);
+        request.setAttribute("fee", sellerChongzhi.getFeePrice());
         request.setAttribute("returnMoney", returnMoney);
         request.setAttribute("chongzhiMoney", sellerChongzhi.getChongzhiPrice());
         return new ModelAndView("/manage/tixian");
@@ -291,6 +309,7 @@ public class UserController extends PCKBaseController {
             //precheck
             Withdraw oldWithdraw = withdrawService.selectWithdrawBySellerId(sellerId);
 
+            //已存在提现，或有订单未完结。商品在线
             if(!precheck(sellerId)  || oldWithdraw != null){
                 return  result.error(ExceptionEnum.TIXIAN_CHECK_ERROR);
             }
@@ -302,17 +321,17 @@ public class UserController extends PCKBaseController {
             }
 
             //费用计算根据用户当前的费率计算
-            BigDecimal fee = orderService.getFee(sellerId);
-            BigDecimal returnMoney = sellerChongzhi.getChongzhiPrice().subtract(fee);
+            //BigDecimal fee = orderService.getFee(sellerId);
+            BigDecimal returnMoney = sellerChongzhi.getChongzhiPrice().subtract(sellerChongzhi.getFeePrice());
 
             Withdraw withdraw = new Withdraw();
             withdraw.setChongzhiPrice(sellerChongzhi.getChongzhiPrice());
-            withdraw.setFeePrice(fee);
+            withdraw.setFeePrice(sellerChongzhi.getFeePrice());
             withdraw.setWithdrawPrice(returnMoney);
             withdraw.setSellerId(sellerId);
             withdraw.setSellerNick(sellerNick);
             withdraw.setSellerRonin(sellerRonin);
-            withdrawService.insert(withdraw);
+            fenzhangService.sellerWithdraw(withdraw);
 
         }catch (Throwable t){
             log.error("tixian error,",t);
@@ -329,6 +348,12 @@ public class UserController extends PCKBaseController {
         pageQuery.setSellerId(sellerId);
         List<Order> orderList = orderService.queryProductListByUserId(pageQuery);
         if(!CollectionUtils.isEmpty(orderList)){
+            return false;
+        }
+
+        //查询未分账订单
+        List<Order> noFenzhangOrderList = orderService.queryLastOrders();
+        if(!CollectionUtils.isEmpty(noFenzhangOrderList)){
             return false;
         }
 
@@ -470,10 +495,49 @@ public class UserController extends PCKBaseController {
 
         List<ChongZhi>  orderList = chongzhiService.queryChongZhiList();
 
+
         //回显示数据
         request.setAttribute("chongzhiList", orderList);
         //
         return new ModelAndView("/manage/chongzhi_manage");
+    }
+
+    /**
+     * 列表
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/toInviteList.htm", method = RequestMethod.GET)
+    public ModelAndView toInviteList(HttpServletRequest request, HttpServletResponse response) {
+
+
+        //logincheck
+        if(!CheckPermissionUtil.hasPermission(request, CookieUtils.LOGIN_COOKIE)){
+            ModelAndView mv = new ModelAndView("redirect:/error.htm?errorMsg=not_login");
+            return mv;
+        }
+
+        UserDTO userDTO = CheckPermissionUtil.getUserDTOFromCookie(request, CookieUtils.LOGIN_COOKIE);
+
+        FeeParam feeParam = new FeeParam();
+        feeParam.setInviteId(userDTO.getId());
+        List<FeeDetail>  feeDetailsList = feeDetailService.selectListByInvitationUserId(feeParam);
+        if(CollectionUtils.isEmpty(feeDetailsList)){
+            request.setAttribute("totalFee", 0);
+        }else{
+
+            BigDecimal total = new BigDecimal(0);
+            for(FeeDetail feeDetail:feeDetailsList){
+                total = total.add(feeDetail.getUserFee());
+            }
+            request.setAttribute("totalFee", total);
+        }
+
+        //回显示数据
+        request.setAttribute("feeDetailsList", feeDetailsList);
+
+        return new ModelAndView("/manage/invite_manage");
     }
 
 }

@@ -7,14 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.pachinko.dao.IWithdrawDao;
 import org.pachinko.domain.ActionTypeEnum;
 import org.pachinko.domain.WithdrawStatusEnum;
+import org.pachinko.dto.ChongzhiParam;
+import org.pachinko.dto.OrderParam;
 import org.pachinko.dto.WithdrawParam;
 import org.pachinko.entity.ActionLog;
+import org.pachinko.entity.ChongZhi;
+import org.pachinko.entity.Order;
 import org.pachinko.entity.Withdraw;
 import org.pachinko.service.IActionLogService;
+import org.pachinko.service.IChongzhiService;
+import org.pachinko.service.IOrderService;
 import org.pachinko.service.IUserService;
 import org.pachinko.service.IWithdrawService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service("withdrawService")
@@ -31,7 +38,12 @@ public class WithdrawServiceImpl implements IWithdrawService {
     private IActionLogService actionLogService;
 
     @Autowired
+    private IChongzhiService chongzhiService;
+
+    @Autowired
     private IUserService userService;
+    @Autowired
+    private IOrderService orderService;
 
     @Override
     public int insert(Withdraw record) {
@@ -39,14 +51,6 @@ public class WithdrawServiceImpl implements IWithdrawService {
         return withdrawDao.insert(record);
     }
 
-    @Override
-    public int sellerWithdraw(Withdraw record) {
-
-
-        this.insert(record);
-
-        return 0;
-    }
 
     @Override
     public int platformWithdrawOk(WithdrawParam withdrawParam) {

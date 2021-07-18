@@ -36,16 +36,15 @@ public class CoinTimerTask extends TimerTask {
         List<Integer> someStatus = OrderStatusEnum.getJobStatus();
         pageQuery.setSomeStatus(someStatus);
 
-        //当前时间-20分
+        //当前时间
         Calendar calendar=Calendar.getInstance();
-        calendar.add(Calendar.MINUTE,-20);
 
         //当前时间+4天
         Calendar newCalendar=Calendar.getInstance();
-        newCalendar.add(Calendar.DAY_OF_MONTH,+4);
+        newCalendar.add(Calendar.DAY_OF_MONTH,-4);
 
-        pageQuery.setStartTime(calendar.getTime());
-        pageQuery.setEndTime(newCalendar.getTime());
+        pageQuery.setStartTime(newCalendar.getTime());
+        pageQuery.setEndTime(calendar.getTime());
 
         List<Order>  orderList = orderService.queryOrderList(pageQuery);
         if(CollectionUtils.isEmpty(orderList)){
@@ -71,6 +70,11 @@ public class CoinTimerTask extends TimerTask {
 
         //未支付处理
         if(order.getStatus() == OrderStatusEnum.NO_PAY.getStatus()){
+
+            if(order.getCreated().getTime()+CANCEL_TIME < System.currentTimeMillis()){
+                log.warn("no pay not in limit time id:{}",order.getId());
+                return;
+            }
 
             //未支付，自动取消订单
             noPayProcess(order);
@@ -126,6 +130,10 @@ public class CoinTimerTask extends TimerTask {
         return;
     }
 
+    /**
+     * 已经发货，未收货处理
+     * @param order
+     */
     private void hasSendGoodsProcess(Order order){
 
         //2天内不确认收款或发起退货申请，系统自动收款

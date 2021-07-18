@@ -37,5 +37,7 @@ public interface IChongzhiService {
 
     public int chongzhiNotOk(ChongzhiParam chongzhiParam);
 
+    int chongzhiFreeze(ChongzhiParam chongzhiParam);
+
 
 }

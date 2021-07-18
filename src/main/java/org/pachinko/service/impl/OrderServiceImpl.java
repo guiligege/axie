@@ -2,10 +2,12 @@ package org.pachinko.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.pachinko.dao.IOrderDao;
@@ -18,8 +20,10 @@ import org.pachinko.dto.ProductParam;
 import org.pachinko.entity.ActionLog;
 import org.pachinko.entity.Order;
 import org.pachinko.service.IActionLogService;
+import org.pachinko.service.IFeeDetailService;
 import org.pachinko.service.IOrderService;
 import org.pachinko.service.IProductService;
+import org.pachinko.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +39,10 @@ public class OrderServiceImpl implements IOrderService {
     private IProductService productService;
     @Autowired
     private IActionLogService actionLogService;
-
+    @Autowired
+    private IFeeDetailService feeDetailService;
+    @Autowired
+    private IUserService userService;
 
     private static final String ROLE_BUYER = "买家";
     private static final String ROLE_SELLER = "卖家";
@@ -52,13 +59,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public BigDecimal getFee(Integer sellerId){
 
-        //check order (无进行中订单)
-        OrderPageQuery pageQuery  = new OrderPageQuery();
-        List<Integer> someStatus = new ArrayList<Integer>();
-        someStatus.add(OrderStatusEnum.FINISH.getStatus());
-        pageQuery.setSomeStatus(someStatus);
-        pageQuery.setSellerId(sellerId);
-        List<Order> orderList = this.queryProductListByUserId(pageQuery);
+        List<Order> orderList = getHasFinishOrders(sellerId);
 
         if(CollectionUtils.isEmpty(orderList)){
             return new BigDecimal(0);
@@ -74,6 +75,26 @@ public class OrderServiceImpl implements IOrderService {
             .divide(new BigDecimal(PERCENT),8,BigDecimal.ROUND_DOWN);
         log.warn("resultFee is:{},totalOrderPrice:{},rakeRate:{},PERCENT:{}");
         return resultFee;
+    }
+
+    @Override
+    public List<Order> getHasFinishOrders(Integer sellerId) {
+        //check order (无进行中订单)
+        OrderPageQuery pageQuery  = new OrderPageQuery();
+        List<Integer> someStatus = new ArrayList<Integer>();
+        someStatus.add(OrderStatusEnum.FINISH.getStatus());
+        pageQuery.setSomeStatus(someStatus);
+
+        //获取未分账的订单，已分账的已经扣减过保证金。
+        pageQuery.setFenzhang(0);
+        pageQuery.setSellerId(sellerId);
+        return this.queryProductListByUserId(pageQuery);
+    }
+
+    @Override
+    public int updateByPrimaryKey(Order order) {
+
+        return orderDao.updateByPrimaryKey(order);
     }
 
     /**
@@ -150,6 +171,8 @@ public class OrderServiceImpl implements IOrderService {
         productService.updateProduct(productParam);
         return 1;
     }
+
+
 
     /**
      * 买家点击已支付 （锁库存扣减，主库存扣减）
@@ -571,5 +594,35 @@ public class OrderServiceImpl implements IOrderService {
 
         return orderDao.queryOrderList(pageQuery);
     }
+
+    @Override
+    public List<Order> queryLastOrders(){
+        OrderPageQuery pageQuery = new OrderPageQuery();
+
+        //当前时间
+        Calendar calendar=Calendar.getInstance();
+
+        //当前时间-7天
+        Calendar newCalendar=Calendar.getInstance();
+        newCalendar.add(Calendar.DAY_OF_MONTH,-7);
+
+        //7天内
+        pageQuery.setStartTime(newCalendar.getTime());
+        pageQuery.setEndTime(calendar.getTime());
+
+        //未分账
+        pageQuery.setFenzhang(0);
+
+        //已完结
+        List<Integer> someStatus = Lists.newArrayList();
+        someStatus.add(OrderStatusEnum.FINISH.getStatus());
+        pageQuery.setSomeStatus(someStatus);
+
+        List<Order>  orderList = this.queryOrderList(pageQuery);
+
+        return orderList;
+    }
+
+
 
 }

@@ -27,4 +27,9 @@ public class ChongzhiParam {
      * 保证金
      */
     private String earnestMoneyStr;
+
+    /**
+     * 费用
+     */
+    private  BigDecimal feePrice;
 }

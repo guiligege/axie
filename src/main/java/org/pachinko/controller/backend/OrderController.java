@@ -179,7 +179,7 @@ public class OrderController extends PCKBaseController {
             updateOrderParam.setProductId(order.getProductId());
             updateOrderParam.setBuyCount(order.getBuyCount());
             //撤销
-            int resultId = orderService.cancelOrder(updateOrderParam);
+            int resultId = orderService.cancelOrder(updateOrderParam,false);
             result.setData(resultId);
         }catch (Throwable t){
             log.error("registByRonin error,",t);
@@ -215,8 +215,8 @@ public class OrderController extends PCKBaseController {
             updateOrderParam.setId(orderParam.getId());
             updateOrderParam.setProductId(order.getProductId());
             updateOrderParam.setBuyCount(order.getBuyCount());
-            //撤销
-            int resultId = orderService.hasRecivedGood(updateOrderParam,null);
+            //收货
+            int resultId = orderService.hasRecivedGood(updateOrderParam,null,false);
             result.setData(resultId);
         }catch (Throwable t){
             log.error("registByRonin error,",t);

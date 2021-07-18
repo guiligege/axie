@@ -227,7 +227,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label"></label>
                                     <div class="col-sm-10">
-                                        <button type="button" class="btn btn-dark shadow-dark px-5"  onclick="void(0);" id = "orderButton">立即下单（默认认可以上声明）</button>
+                                        <button type="button" class="btn btn-dark shadow-dark px-5"  onclick="void(0);" id = "orderButton">立即下单（默认认可免责声明）</button>
                                     </div>
                                 </div>
                             </form>

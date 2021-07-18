@@ -28,7 +28,7 @@ public interface IOrderService {
      * @param orderParam
      * @return
      */
-    int cancelOrder(OrderParam orderParam);
+    int cancelOrder(OrderParam orderParam,boolean isSystem);
 
     /**
      * 发起退款
@@ -76,7 +76,7 @@ public interface IOrderService {
      */
     int updateOrder(OrderParam orderParam);
 
-    int hasRecivedGood(OrderParam orderParam,Order order) ;
+    int hasRecivedGood(OrderParam orderParam,Order order,boolean isSystem);
 
     int autoRecivedGood(OrderParam orderParam);
 
@@ -133,4 +133,6 @@ public interface IOrderService {
     int addLog(Integer userId,Long orderId,String content);
 
     BigDecimal getFee(Integer sellerId);
+
+    List<Order> queryOrderList(OrderPageQuery pageQuery);
 }

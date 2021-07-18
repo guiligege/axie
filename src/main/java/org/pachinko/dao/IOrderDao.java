@@ -42,4 +42,6 @@ public interface IOrderDao {
 
     List<Order> queryOrderListByUserId(OrderPageQuery pageQuery);
 
+    List<Order> queryOrderList(OrderPageQuery pageQuery);
+
 }

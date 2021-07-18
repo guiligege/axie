@@ -103,4 +103,13 @@ public enum OrderStatusEnum {
         return avaliableStatus;
     }
 
+    public static List<Integer> getJobStatus(){
+
+        List<Integer> avaliableStatus = Lists.newArrayList();
+        avaliableStatus.add(NO_PAY.status);
+        avaliableStatus.add(HAS_PAY.status);
+        avaliableStatus.add(SEND_GOODS.status);
+        return avaliableStatus;
+    }
+
 }

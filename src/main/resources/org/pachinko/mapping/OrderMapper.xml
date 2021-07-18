@@ -106,6 +106,16 @@
         LIMIT 100
     </select>
 
+    <select id="queryOrderList" parameterType="org.pachinko.dto.OrderPageQuery" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM  t_order
+        <include refid="pageQueryWhereCause"/>
+
+        order by created desc
+        LIMIT 1000
+    </select>
+
     <sql id="pageQueryWhereCause">
         <where>
             <if test="sellerId != null">
@@ -117,6 +127,14 @@
 
             <if test="status != null">
                 AND status = #{status}
+            </if>
+
+            <if test="startTime != null">
+                AND created &gt;= #{startTime}
+            </if>
+
+            <if test="endTime != null">
+                AND created &lt;= #{endTime}
             </if>
 
             <if test="someStatus != null">

@@ -1,5 +1,6 @@
 package org.pachinko.dto;
 
+import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
@@ -14,4 +15,7 @@ public class OrderPageQuery extends BasePageQuery{
     private Integer buyerId;
     private Integer sellerId;
     private List<Integer> someStatus;
+
+    private Date startTime;
+    private Date endTime;
 }

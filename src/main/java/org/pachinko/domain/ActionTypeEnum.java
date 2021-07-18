@@ -67,6 +67,9 @@ public enum ActionTypeEnum {
     //发起充值
     SELLER_PAY("发起充值",33),
 
+    //撤销
+    SYSTEM_CANCEL("系统撤销",34),
+
     ;
 
     private String name;

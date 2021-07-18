@@ -2,6 +2,7 @@ package org.pachinko.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -119,7 +120,7 @@ public class OrderServiceImpl implements IOrderService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int cancelOrder(OrderParam orderParam) {
+    public int cancelOrder(OrderParam orderParam,boolean isSystem) {
 
         Order order = getOrderById(orderParam.getId());
         if(order == null){
@@ -134,7 +135,11 @@ public class OrderServiceImpl implements IOrderService {
         //log
         ActionLog actionLog = new ActionLog();
         actionLog.buildBaseActionLog(order.getId(),order.getBuyerId(),order.getBuyerNick(),ROLE_BUYER);
-        actionLog.buildAction(ActionTypeEnum.CANCEL,ActionTypeEnum.CANCEL.getName());
+        if(isSystem){
+            actionLog.buildAction(ActionTypeEnum.SYSTEM_CANCEL,ActionTypeEnum.SYSTEM_CANCEL.getName());
+        }else{
+            actionLog.buildAction(ActionTypeEnum.CANCEL,ActionTypeEnum.CANCEL.getName());
+        }
         actionLogService.addActionLog(actionLog);
 
         //goods 锁库存
@@ -191,18 +196,20 @@ public class OrderServiceImpl implements IOrderService {
      * @return
      */
     @Override
-    public int hasRecivedGood(OrderParam orderParam,Order order) {
+    public int hasRecivedGood(OrderParam orderParam,Order order,boolean isSystem) {
 
         if(order  == null){
             order = getOrderById(orderParam.getId());
         }
         this.hasFinish(order);
 
-        //log
-        ActionLog actionLog = new ActionLog();
-        actionLog.buildBaseActionLog(order.getId(),order.getBuyerId(),order.getBuyerNick(),ROLE_BUYER);
-        actionLog.buildAction(ActionTypeEnum.HAS_RECIEVED,ActionTypeEnum.HAS_RECIEVED.getName());
-        actionLogService.addActionLog(actionLog);
+        if(!isSystem){
+            //log
+            ActionLog actionLog = new ActionLog();
+            actionLog.buildBaseActionLog(order.getId(),order.getBuyerId(),order.getBuyerNick(),ROLE_BUYER);
+            actionLog.buildAction(ActionTypeEnum.HAS_RECIEVED,ActionTypeEnum.HAS_RECIEVED.getName());
+            actionLogService.addActionLog(actionLog);
+        }
         return 1;
     }
 
@@ -248,7 +255,7 @@ public class OrderServiceImpl implements IOrderService {
     public int autoRecivedGood(OrderParam orderParam) {
 
         Order order = getOrderById(orderParam.getId());
-        this.hasRecivedGood(orderParam,order);
+        this.hasRecivedGood(orderParam,order,true);
 
         //log
         ActionLog actionLog = new ActionLog();
@@ -551,6 +558,18 @@ public class OrderServiceImpl implements IOrderService {
         actionLog.buildAction(ActionTypeEnum.CHAT,content);
         actionLogService.addActionLog(actionLog);
         return 1;
+    }
+
+
+    @Override
+    public List<Order> queryOrderList(OrderPageQuery pageQuery) {
+
+        if(pageQuery.getEndTime() ==null
+            ||pageQuery.getStartTime() == null){
+            return Collections.EMPTY_LIST;
+        }
+
+        return orderDao.queryOrderList(pageQuery);
     }
 
 }
